@@ -1,0 +1,92 @@
+---
+title: "3 - Data Visualization"
+output: html_notebook
+---
+
+Load the `tidyverse` library:
+
+```{r}
+library(tidyverse)
+```
+
+The `mpg` dataset contains observations from various models of cars:
+
+```{r}
+mpg
+```
+
+
+We can plot the highway mpg vs. engine size:
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+3.2.4 Exercises
+
+1. Run `ggplot(data = mpg)`. What do you see?
+
+```{r}
+ggplot(data = mpg)
+```
+
+We see a blank ggplot canvas since we have not added any geometric objects.
+
+2. How many rows are in `mpg`? How many columns?
+
+```{r}
+dim(mpg)
+```
+
+In the `mpg` dataset, the number of rows is 234, and the number of columns is 11.
+
+3. What does the `drv` variable describe? Read the help for `?mpg` to find out.
+
+```{r}
+?mpg
+```
+
+The `drv` variable describes whether the vechile is front-wheel drive (f), read-wheel drive (r), or four-wheel drive (4).
+
+4. Make a scatterplot of `hwy` vs `cyl`.
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(aes(x = cyl, y = hwy))
+```
+
+5. What happens if you make a scatterplot of `class` vs `drv`? Why is the plot not useful?
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(aes(x = cyl, y = class))
+```
+
+This plot is since multiple classes have multiple numbers of cylinders.
+
+We can plot the highway mpg vs. engine size and display the color of the points based on the vehicle class:
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+3.3.1 Exercises
+
+1. What’s gone wrong with this code? Why are the points not blue?
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+```
+
+The `color` option should be outside of the aesthetic settings.
+
+2. Which variables in `mpg` are categorical? Which variables are continuous? (Hint: type `?mpg` to read the documentation for the dataset). How can you see this information when you run `mpg`?
+
+```{r}
+mpg
+```
+
+In the `mpg` dataset, categorical values such as `model`, `displacement`, and `cyl` are prescribed, while continuous variables such as `cty` and `hwy` are measured. You can view the type information for the variables in the dataframe as a guide.
