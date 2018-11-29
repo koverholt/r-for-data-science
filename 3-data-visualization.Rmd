@@ -3,9 +3,7 @@ title: "3 - Data Visualization"
 output: html_notebook
 ---
 
-Load the `tidyverse` library:
-
-```{r}
+```{r include=FALSE}
 library(tidyverse)
 ```
 
@@ -43,10 +41,6 @@ In the `mpg` dataset, the number of rows is 234, and the number of columns is 11
 
 3. What does the `drv` variable describe? Read the help for `?mpg` to find out.
 
-```{r}
-?mpg
-```
-
 The `drv` variable describes whether the vechile is front-wheel drive (f), read-wheel drive (r), or four-wheel drive (4).
 
 4. Make a scatterplot of `hwy` vs `cyl`.
@@ -63,7 +57,7 @@ ggplot(data = mpg) +
   geom_point(aes(x = cyl, y = class))
 ```
 
-This plot is since multiple classes have multiple numbers of cylinders.
+This plot is not useful since multiple classes have multiple numbers of cylinders.
 
 We can plot the highway mpg vs. engine size and display the color of the points based on the vehicle class:
 
@@ -77,11 +71,16 @@ ggplot(data = mpg) +
 1. What’s gone wrong with this code? Why are the points not blue?
 
 ```{r}
-ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
 ```
 
-The `color` option should be outside of the aesthetic settings.
+The `color` option should be outside of the aesthetic settings, as in:
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+```
 
 2. Which variables in `mpg` are categorical? Which variables are continuous? (Hint: type `?mpg` to read the documentation for the dataset). How can you see this information when you run `mpg`?
 
@@ -89,4 +88,42 @@ The `color` option should be outside of the aesthetic settings.
 mpg
 ```
 
-In the `mpg` dataset, categorical values such as `model`, `displacement`, and `cyl` are prescribed, while continuous variables such as `cty` and `hwy` are measured. You can view the type information for the variables in the dataframe as a guide.
+In the `mpg` dataset, categorical values such as `model`, `displacement`, and `cyl` are prescribed, while continuous variables such as `cty` and `hwy` are measured.
+
+You can also use the type information for the variables in the dataframe as a guide, where character strings (`chr`) are typically considered to be categorical values, and numeric values (`dbl` and `int`) are considered to be continuous values.
+
+3. Map a continuous variable to `color`, `size`, and `shape.` How do these aesthetics behave differently for categorical vs. continuous variables?
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = cty, size = displ))
+```
+
+The `color` and `size` aesthetics will detect whether the variable is categorial or continuous based on the data type and show either discrete or continuous values, whereas `shape` uses discrete symbols and can only be used for categorical variables.
+
+4. What happens if you map the same variable to multiple aesthetics?
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = hwy, size = hwy))
+```
+
+It will work, but the results can be redundant using different visual aesthetics to convey the same information, so it should be used with care.
+
+5. What does the `stroke` aesthetic do? What shapes does it work with? (Hint: use `?geom_point`)
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, stroke = cty/10))
+```
+
+The stroke changes the thickness of the border of shapes, and will work for all shapes that have a border.
+
+6. What happens if you map an aesthetic to something other than a variable name, like `aes(colour = displ < 5)`? Note, you’ll also need to specify x and y.
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = displ < 5))
+```
+
+It will use your expression to create discrete bins for a given aesthetic, such as two colors in the example provided, and the color indicate if the engine displacement is greater than or less than 5.
